@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NormalUser{% endblock %}
+
+{% block body %}
+    <h1>NormalUser</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ normal_user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ normal_user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ normal_user.roles ? normal_user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ normal_user.password }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ normal_user.username }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ normal_user.phone }}</td>
+            </tr>
+            <tr>
+                <th>AvatarUrl</th>
+                <td>{{ normal_user.avatarUrl }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ normal_user.createdAt ? normal_user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ normal_user.status ? normal_user.status.value : '' }}</td>
+            </tr>
+            <tr>
+                <th>BirthDate</th>
+                <td>{{ normal_user.birthDate ? normal_user.birthDate|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_normal_user_index') }}">back to list</a>
+
+    <a href="{{ path('app_normal_user_edit', {'id': normal_user.id}) }}">edit</a>
+
+    {{ include('normal_user/_delete_form.html.twig') }}
+{% endblock %}

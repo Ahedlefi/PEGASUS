@@ -1,0 +1,94 @@
+<div class="profile-inline-edit">
+    <div class="profile-inline-row">
+        <div class="profile-inline-view">
+            <div>
+                <div class="profile-inline-label">Email</div>
+                <div class="profile-inline-value">{{ profileUser.email ?? '-' }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-inline-row" data-field="username">
+        <div class="profile-inline-view">
+            <div>
+                <div class="profile-inline-label">Username</div>
+                <div class="profile-inline-value">{{ profileUser.username ?? '-' }}</div>
+            </div>
+            <button type="button" class="profile-inline-edit-btn" data-target="username">Edit</button>
+        </div>
+        <div class="profile-inline-form" data-form="username">
+            {{ form_start(usernameForm, {'attr': {'class': 'profile-inline-form-inner'}}) }}
+                {{ form_row(usernameForm.username) }}
+                <div class="profile-inline-actions">
+                    <button class="btn" type="submit">Save</button>
+                    <button type="button" class="profile-inline-cancel-btn" data-target="username">Cancel</button>
+                </div>
+            {{ form_end(usernameForm) }}
+        </div>
+    </div>
+
+    <div class="profile-inline-row" data-field="phone">
+        <div class="profile-inline-view">
+            <div>
+                <div class="profile-inline-label">Phone</div>
+                <div class="profile-inline-value">{{ profileUser.phone ?? '-' }}</div>
+            </div>
+            <button type="button" class="profile-inline-edit-btn" data-target="phone">Edit</button>
+        </div>
+        <div class="profile-inline-form" data-form="phone">
+            {{ form_start(phoneForm, {'attr': {'class': 'profile-inline-form-inner'}}) }}
+                {{ form_row(phoneForm.phone) }}
+                <div class="profile-inline-actions">
+                    <button class="btn" type="submit">Save</button>
+                    <button type="button" class="profile-inline-cancel-btn" data-target="phone">Cancel</button>
+                </div>
+            {{ form_end(phoneForm) }}
+        </div>
+    </div>
+
+    <div class="profile-inline-row" data-field="avatar">
+        <div class="profile-inline-view">
+            <div>
+                <div class="profile-inline-label">Avatar URL</div>
+                <div class="profile-inline-value">{{ profileUser.avatarUrl ?? '-' }}</div>
+            </div>
+            <button type="button" class="profile-inline-edit-btn" data-target="avatar">Edit</button>
+        </div>
+        <div class="profile-inline-form" data-form="avatar">
+            {{ form_start(avatarForm, {'attr': {'class': 'profile-inline-form-inner'}}) }}
+                {{ form_row(avatarForm.avatarUrl) }}
+                <div class="profile-inline-actions">
+                    <button class="btn" type="submit">Save</button>
+                    <button type="button" class="profile-inline-cancel-btn" data-target="avatar">Cancel</button>
+                </div>
+            {{ form_end(avatarForm) }}
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const editButtons = document.querySelectorAll('.profile-inline-edit-btn');
+        const cancelButtons = document.querySelectorAll('.profile-inline-cancel-btn');
+
+        editButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const target = button.getAttribute('data-target');
+                const form = document.querySelector(`.profile-inline-form[data-form="${target}"]`);
+                if (form) {
+                    form.classList.add('is-active');
+                }
+            });
+        });
+
+        cancelButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const target = button.getAttribute('data-target');
+                const form = document.querySelector(`.profile-inline-form[data-form="${target}"]`);
+                if (form) {
+                    form.classList.remove('is-active');
+                }
+            });
+        });
+    })();
+</script>

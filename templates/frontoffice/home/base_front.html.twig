@@ -1,16 +1,115 @@
-
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Art & Fantasy Events Platform</title>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Art & Fantasy Events Platform{% endblock %}</title>
+    {% set disable_react = disable_react|default(false) %}
+    <script>
+      window.__APP_USER__ = {{ app.user ? {'username': app.user.username, 'email': app.user.email, 'isAuthenticated': true}|json_encode|raw : 'null' }};
+    </script>
+    {% if not disable_react %}
       <script type="module" crossorigin src="{{ asset('frontoffice/assets/index-CKC7ctkg.js') }}"></script>
       <link rel="stylesheet" crossorigin href="{{ asset('frontoffice/assets/index-VL1jIILM.css') }}">
-    </head>
+    {% endif %}
+    {% block head_extra %}{% endblock %}
+  </head>
 
-    <body>
+  <body>
+    {% block body %}
       <div id="root"></div>
-    </body>
-  </html>
-  
+    {% endblock %}
+    
+    {% if not disable_react %}
+    <script>
+      // Setup logout form
+      function setupLogoutForm() {
+        const logoutForm = document.createElement('form');
+        logoutForm.id = 'logout-form';
+        logoutForm.action = '/logout';
+        logoutForm.method = 'POST';
+        logoutForm.style.display = 'none';
+        
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = '_csrf_token';
+        csrfInput.value = '{{ csrf_token("logout") }}';
+        
+        logoutForm.appendChild(csrfInput);
+        document.body.appendChild(logoutForm);
+        
+        window.handleLogout = function(e) {
+          if (e) e.preventDefault();
+          document.getElementById('logout-form').submit();
+        };
+      }
+      
+      // Patch React rendering for auth buttons
+      function patchAuthButtons() {
+        const user = window.__APP_USER__;
+        
+        // Use MutationObserver to watch for nav changes
+        const observer = new MutationObserver(() => {
+          const navDiv = document.querySelector('div.flex.items-center.gap-2');
+          if (navDiv && navDiv.querySelectorAll('a').length === 2) {
+            const signInLink = navDiv.querySelector('a[href="/auth/sign-in"]');
+            
+            if (user && signInLink) {
+              // Replace buttons with logout button
+              navDiv.innerHTML = `
+                <span style="margin-right: 1rem; color: white; font-weight: 500;">
+                  ${user.username}
+                </span>
+                <button onclick="window.handleLogout()" style="
+                  border: 1px solid rgba(255, 255, 255, 0.3);
+                  background-color: #ff6600;
+                  color: black;
+                  padding: 0.5rem 1rem;
+                  border-radius: 0.375rem;
+                  font-size: 0.875rem;
+                  font-weight: 500;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+                  display: inline-block;
+                ">Sign Out</button>
+              `;
+              observer.disconnect();
+            } else if (!user) {
+              // Keep original buttons visible
+              if (signInLink) signInLink.style.display = 'inline-block';
+              const signUpLink = navDiv.querySelector('a[href="/auth/sign-up"]');
+              if (signUpLink) signUpLink.style.display = 'inline-block';
+            }
+          }
+        });
+        
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: false
+        });
+        
+        // Check after React loads
+        setTimeout(() => {
+          const navDiv = document.querySelector('div.flex.items-center.gap-2');
+          if (navDiv && user) {
+            observer.takeRecords();
+            patchAuthButtons();
+          }
+        }, 1000);
+      }
+      
+      setupLogoutForm();
+      
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', patchAuthButtons);
+      } else {
+        patchAuthButtons();
+      }
+      
+      // Also try patching after a delay
+      setTimeout(patchAuthButtons, 2000);
+    </script>
+    {% endif %}
+  </body>
+</html>

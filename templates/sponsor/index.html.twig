@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sponsor index{% endblock %}
+
+{% block body %}
+    <h1>Sponsor index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>AvatarUrl</th>
+                <th>CreatedAt</th>
+                <th>Status</th>
+                <th>CompanyName</th>
+                <th>Website</th>
+                <th>Address</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sponsor in sponsors %}
+            <tr>
+                <td>{{ sponsor.id }}</td>
+                <td>{{ sponsor.email }}</td>
+                <td>{{ sponsor.roles ? sponsor.roles|json_encode : '' }}</td>
+                <td>{{ sponsor.password }}</td>
+                <td>{{ sponsor.username }}</td>
+                <td>{{ sponsor.phone }}</td>
+                <td>{{ sponsor.avatarUrl }}</td>
+                <td>{{ sponsor.createdAt ? sponsor.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ sponsor.status ? sponsor.status.value : '' }}</td>
+                <td>{{ sponsor.companyName }}</td>
+                <td>{{ sponsor.website }}</td>
+                <td>{{ sponsor.address }}</td>
+                <td>{{ sponsor.description }}</td>
+                <td>
+                    <a href="{{ path('app_sponsor_show', {'id': sponsor.id}) }}">show</a>
+                    <a href="{{ path('app_sponsor_edit', {'id': sponsor.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_sponsor_new') }}">Create new</a>
+{% endblock %}

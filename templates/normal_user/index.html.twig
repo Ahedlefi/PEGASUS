@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NormalUser index{% endblock %}
+
+{% block body %}
+    <h1>NormalUser index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>AvatarUrl</th>
+                <th>CreatedAt</th>
+                <th>Status</th>
+                <th>BirthDate</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for normal_user in normal_users %}
+            <tr>
+                <td>{{ normal_user.id }}</td>
+                <td>{{ normal_user.email }}</td>
+                <td>{{ normal_user.roles ? normal_user.roles|json_encode : '' }}</td>
+                <td>{{ normal_user.password }}</td>
+                <td>{{ normal_user.username }}</td>
+                <td>{{ normal_user.phone }}</td>
+                <td>{{ normal_user.avatarUrl }}</td>
+                <td>{{ normal_user.createdAt ? normal_user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ normal_user.status ? normal_user.status.value : '' }}</td>
+                <td>{{ normal_user.birthDate ? normal_user.birthDate|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_normal_user_show', {'id': normal_user.id}) }}">show</a>
+                    <a href="{{ path('app_normal_user_edit', {'id': normal_user.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_normal_user_new') }}">Create new</a>
+{% endblock %}

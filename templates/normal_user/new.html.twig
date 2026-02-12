@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New NormalUser{% endblock %}
+
+{% block body %}
+    <h1>Create new NormalUser</h1>
+
+    {{ include('normal_user/_form.html.twig', {'show_password': true}) }}
+
+    <a href="{{ path('app_normal_user_index') }}">back to list</a>
+{% endblock %}

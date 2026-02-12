@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artiste index{% endblock %}
+
+{% block body %}
+    <h1>Artiste index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>AvatarUrl</th>
+                <th>CreatedAt</th>
+                <th>Status</th>
+                <th>Bio</th>
+                <th>Styles</th>
+                <th>Facebook</th>
+                <th>Instagram</th>
+                <th>PortfolioUrl</th>
+                <th>Verified</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for artiste in artistes %}
+            <tr>
+                <td>{{ artiste.id }}</td>
+                <td>{{ artiste.email }}</td>
+                <td>{{ artiste.roles ? artiste.roles|json_encode : '' }}</td>
+                <td>{{ artiste.password }}</td>
+                <td>{{ artiste.username }}</td>
+                <td>{{ artiste.phone }}</td>
+                <td>{{ artiste.avatarUrl }}</td>
+                <td>{{ artiste.createdAt ? artiste.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ artiste.status ? artiste.status.value : '' }}</td>
+                <td>{{ artiste.bio }}</td>
+                <td>{{ artiste.styles }}</td>
+                <td>{{ artiste.facebook }}</td>
+                <td>{{ artiste.instagram }}</td>
+                <td>{{ artiste.portfolioUrl }}</td>
+                <td>{{ artiste.verified ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_artiste_show', {'id': artiste.id}) }}">show</a>
+                    <a href="{{ path('app_artiste_edit', {'id': artiste.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="16">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_artiste_new') }}">Create new</a>
+{% endblock %}

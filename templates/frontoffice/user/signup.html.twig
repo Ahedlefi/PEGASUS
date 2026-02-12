@@ -1,0 +1,102 @@
+{% extends 'frontoffice/home/base_front.html.twig' %}
+
+{% set disable_react = true %}
+{% block title %}Sign Up - {{ role|capitalize }}{% endblock %}
+
+{% block body %}
+<div class="auth-shell">
+    <div class="auth-card">
+        <h2>Sign Up as {{ role|capitalize }}</h2>
+        <p class="auth-subtitle">Complete your details to create your account.</p>
+
+        {{ form_start(form, {'attr': {'class': 'signup-form'}}) }}
+            {{ form_widget(form) }}
+            <button class="auth-btn" style="margin-top: 1rem;">Create Account</button>
+        {{ form_end(form) }}
+
+        <div class="auth-links">
+            <a href="{{ path('app_frontoffice_home') }}">Back to main</a>
+            <a href="{{ path('frontoffice_signup_role') }}">&larr; Back to role selection</a>
+        </div>
+    </div>
+</div>
+<style>
+.auth-shell {
+    min-height: calc(100vh - 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #090909 0%, #1a1a1a 60%, #111111 100%);
+}
+.auth-card {
+    width: 100%;
+    max-width: 760px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+}
+.auth-card h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.85rem;
+}
+.auth-subtitle {
+    margin: 0.45rem 0 1.2rem;
+    color: #4b5563;
+}
+.signup-form label {
+    display: block;
+    margin: 0.35rem 0 0.35rem;
+    color: #111827;
+    font-weight: 600;
+}
+.signup-form input,
+.signup-form select,
+.signup-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.6rem;
+    outline: none;
+}
+.signup-form input:focus,
+.signup-form select:focus,
+.signup-form textarea:focus {
+    border-color: #ff6600;
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+}
+.signup-form textarea {
+    min-height: 100px;
+}
+.auth-btn {
+    width: 100%;
+    border: 0;
+    border-radius: 0.6rem;
+    background: #ff6600;
+    color: #111827;
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+}
+.auth-btn:hover {
+    background: #ff7f2a;
+}
+.auth-links {
+    margin-top: 1rem;
+}
+.auth-links a {
+    color: #ff6600;
+    text-decoration: none;
+    font-weight: 600;
+}
+.auth-links a + a {
+    margin-left: 1rem;
+}
+.auth-links a:hover {
+    color: #ff7f2a;
+}
+</style>
+{% endblock %}

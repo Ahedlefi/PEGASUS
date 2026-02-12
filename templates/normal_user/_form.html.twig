@@ -1,0 +1,9 @@
+{% set show_password = show_password is defined ? show_password : false %}
+
+{{ form_start(form) }}
+    {% if not show_password and form.password is defined %}
+        {% do form.password.setRendered %}
+    {% endif %}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

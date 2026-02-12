@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artiste{% endblock %}
+
+{% block body %}
+    <h1>Artiste</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ artiste.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ artiste.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ artiste.roles ? artiste.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ artiste.password }}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ artiste.username }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ artiste.phone }}</td>
+            </tr>
+            <tr>
+                <th>AvatarUrl</th>
+                <td>{{ artiste.avatarUrl }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ artiste.createdAt ? artiste.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ artiste.status ? artiste.status.value : '' }}</td>
+            </tr>
+            <tr>
+                <th>Bio</th>
+                <td>{{ artiste.bio }}</td>
+            </tr>
+            <tr>
+                <th>Styles</th>
+                <td>{{ artiste.styles }}</td>
+            </tr>
+            <tr>
+                <th>Facebook</th>
+                <td>{{ artiste.facebook }}</td>
+            </tr>
+            <tr>
+                <th>Instagram</th>
+                <td>{{ artiste.instagram }}</td>
+            </tr>
+            <tr>
+                <th>PortfolioUrl</th>
+                <td>{{ artiste.portfolioUrl }}</td>
+            </tr>
+            <tr>
+                <th>Verified</th>
+                <td>{{ artiste.verified ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_artiste_index') }}">back to list</a>
+
+    <a href="{{ path('app_artiste_edit', {'id': artiste.id}) }}">edit</a>
+
+    {{ include('artiste/_delete_form.html.twig') }}
+{% endblock %}

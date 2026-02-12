@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin index{% endblock %}
+
+{% block body %}
+    <h1>Admin index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>AvatarUrl</th>
+                <th>CreatedAt</th>
+                <th>Status</th>
+                <th>SuperAdmin</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for admin in admins %}
+            <tr>
+                <td>{{ admin.id }}</td>
+                <td>{{ admin.email }}</td>
+                <td>{{ admin.roles ? admin.roles|json_encode : '' }}</td>
+                <td>{{ admin.password }}</td>
+                <td>{{ admin.username }}</td>
+                <td>{{ admin.phone }}</td>
+                <td>{{ admin.avatarUrl }}</td>
+                <td>{{ admin.createdAt ? admin.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ admin.status ? admin.status.value : '' }}</td>
+                <td>{{ admin.superAdmin ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_admin_show', {'id': admin.id}) }}">show</a>
+                    <a href="{{ path('app_admin_edit', {'id': admin.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_new') }}">Create new</a>
+{% endblock %}

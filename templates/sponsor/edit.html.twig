@@ -1,0 +1,28 @@
+{% extends 'frontoffice/home/base_front.html.twig' %}
+
+{% set disable_react = true %}
+{% block title %}Edit Sponsor{% endblock %}
+
+{% block body %}
+    <div class="profile-shell">
+        <div class="profile-card">
+            <h1>Edit Profile</h1>
+            <p class="profile-subtitle">Update your sponsor account details.</p>
+
+            {{ include('frontoffice/user/_profile_inline_edit.html.twig', {
+                profileUser: sponsor,
+                usernameForm: usernameForm,
+                phoneForm: phoneForm,
+                avatarForm: avatarForm
+            }) }}
+
+            <div class="profile-actions">
+                <a class="profile-link" href="{{ path('app_frontoffice_dashboard') }}">Back to dashboard</a>
+                <div class="profile-danger">
+                    {{ include('sponsor/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ include('frontoffice/user/_profile_edit_style.html.twig') }}
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'frontoffice/home/base_front.html.twig' %}
+
+{% set disable_react = true %}
+{% block title %}Sign Up - Choose Role{% endblock %}
+
+{% block body %}
+<div class="auth-shell">
+    <div class="auth-card role-card-layout">
+        <h2>Choose Your Role</h2>
+        <p class="auth-subtitle">Select the account type before filling the signup form.</p>
+        <div class="role-options">
+            <a href="{{ path('frontoffice_signup_form', {'role': 'admin'}) }}" class="role-card">Admin</a>
+            <a href="{{ path('frontoffice_signup_form', {'role': 'normal'}) }}" class="role-card">Normal User</a>
+            <a href="{{ path('frontoffice_signup_form', {'role': 'sponsor'}) }}" class="role-card">Sponsor</a>
+            <a href="{{ path('frontoffice_signup_form', {'role': 'artiste'}) }}" class="role-card">Artiste</a>
+        </div>
+        <div class="auth-links">
+            <a href="{{ path('app_frontoffice_home') }}">Back to main</a>
+        </div>
+    </div>
+</div>
+<style>
+.auth-shell {
+    min-height: calc(100vh - 2rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #090909 0%, #1a1a1a 60%, #111111 100%);
+}
+.auth-card {
+    width: 100%;
+    max-width: 760px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+}
+.auth-card h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.85rem;
+    text-align: center;
+}
+.auth-subtitle {
+    margin: 0.45rem 0 1.2rem;
+    color: #4b5563;
+    text-align: center;
+}
+.role-card {
+    display: block;
+    padding: 1rem 1.2rem;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.8rem;
+    color: #111827;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+.role-card:hover {
+    border-color: #ff6600;
+    background: #fff7f2;
+    color: #ff6600;
+    transform: translateY(-1px);
+}
+.role-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+.auth-links {
+    margin-top: 1.2rem;
+    text-align: center;
+}
+.auth-links a {
+    color: #ff6600;
+    text-decoration: none;
+    font-weight: 600;
+}
+.auth-links a:hover {
+    color: #ff7f2a;
+}
+@media (max-width: 640px) {
+    .role-options {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
