@@ -1,0 +1,375 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Artworks{% endblock %}
+
+{% block body %}
+<div class="row">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 mb-4">
+        <div class="sidebar">
+            <h5 class="mb-3">
+                <i class="fas fa-cog me-2"></i>Menu
+            </h5>
+            <nav class="nav flex-column">
+                <a class="nav-link active" href="{{ path('app_artwork_index') }}">
+                    <i class="fas fa-list me-2"></i>Liste des Artworks
+                </a>
+                <a class="nav-link" href="{{ path('app_artwork_new') }}">
+                    <i class="fas fa-plus me-2"></i>Ajouter un Artwork
+                </a>
+            </nav>
+            
+            <hr class="my-3">
+            
+            <h6 class="text-muted mb-3">Statistiques</h6>
+            <div class="small">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Total:</span>
+                    <strong>{{ artworks|length }}</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Publiés:</span>
+                    <strong>{{ artworks|filter(a => a.status == 'published')|length }}</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Brouillons:</span>
+                    <strong>{{ artworks|filter(a => a.status == 'draft')|length }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 col-lg-10">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-images me-2"></i>Gestion des Artworks
+                </h1>
+                <p class="text-muted mb-0">Gérez votre collection d'artworks</p>
+            </div>
+            <div>
+                <a href="{{ path('app_artwork_new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Ajouter un Artwork
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Rechercher un artwork..." id="searchInput">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">Tous les statuts</option>
+                            <option value="published">Publiés</option>
+                            <option value="draft">Brouillons</option>
+                            <option value="archived">Archivés</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Artworks Table -->
+        <div class="card">
+            <div class="card-body p-0">
+                {% if artworks|length > 0 %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="artworksTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">ID</th>
+                                    <th>Image</th>
+                                    <th>Titre</th>
+                                    <th>Description</th>
+                                    <th>Statut</th>
+                                    <th>Créé le</th>
+                                    <th style="width: 120px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for artwork in artworks %}
+                                    <tr data-status="{{ artwork.status }}">
+                                        <td><span class="badge bg-secondary">{{ artwork.id }}</span></td>
+                                        <td>
+                                            {% if artwork.imageUrl %}
+                                                <img src="{{ artwork.imageUrl }}" alt="{{ artwork.title }}" 
+                                                     class="rounded" style="width: 40px; height: 40px; object-fit: cover;"
+                                                     onerror="this.src='https://via.placeholder.com/40x40?text=No+Image'">
+                                            {% else %}
+                                                <div class="rounded bg-light d-flex align-items-center justify-content-center" 
+                                                     style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-image text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ artwork.title }}</strong>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted small">
+                                                {{ artwork.description|slice(0, 80) ~ (artwork.description|length > 80 ? '...' : '') }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ artwork.status == 'published' ? 'success' : artwork.status == 'draft' ? 'warning' : 'secondary' }}">
+                                                <i class="fas fa-{{ artwork.status == 'published' ? 'check' : artwork.status == 'draft' ? 'edit' : 'archive' }} me-1"></i>
+                                                {{ artwork.status == 'published' ? 'Publié' : artwork.status == 'draft' ? 'Brouillon' : 'Archivé' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="small text-muted">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                {{ artwork.createdAt ? artwork.createdAt|date('d/m/Y') : '' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{{ path('app_artwork_show', {'id': artwork.id}) }}" 
+                                                   class="btn btn-outline-info" title="Voir">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ path('app_artwork_edit', {'id': artwork.id}) }}" 
+                                                   class="btn btn-outline-warning" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                {% if artwork.status != 'published' %}
+                                                    <button type="button" class="btn btn-outline-success" 
+                                                            title="Publier" data-bs-toggle="modal" 
+                                                            data-bs-target="#publishModal{{ artwork.id }}">
+                                                        <i class="fas fa-share"></i>
+                                                    </button>
+                                                {% endif %}
+                                                <button type="button" class="btn btn-outline-danger" 
+                                                        title="Supprimer" data-bs-toggle="modal" 
+                                                        data-bs-target="#deleteModal{{ artwork.id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Publish Modal -->
+                                            {% if artwork.status != 'published' %}
+                                            <div class="modal fade" id="publishModal{{ artwork.id }}" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Publier l'artwork</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Êtes-vous sûr de vouloir publier l'artwork "<strong>{{ artwork.title }}</strong>"?</p>
+                                                            <p class="text-success small">
+                                                                <i class="fas fa-info-circle me-1"></i>
+                                                                Une fois publié, l'artwork sera visible par tous les utilisateurs.
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <form method="post" action="{{ path('app_artwork_publish', {'id': artwork.id}) }}" style="display: inline;">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token('publish' ~ artwork.id) }}">
+                                                                <button type="submit" class="btn btn-success">
+                                                                    <i class="fas fa-share me-2"></i>Publier
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            
+                                            <!-- Delete Modal -->
+                                            <div class="modal fade" id="deleteModal{{ artwork.id }}" tabindex="-1">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Confirmer la suppression</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Êtes-vous sûr de vouloir supprimer l'artwork "<strong>{{ artwork.title }}</strong>"?</p>
+                                                            <p class="text-danger small">Cette action est irréversible.</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <form method="post" action="{{ path('app_artwork_delete', {'id': artwork.id}) }}" style="display: inline;">
+                                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ artwork.id) }}">
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="fas fa-trash me-2"></i>Supprimer
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-images fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Aucun artwork trouvé</h5>
+                        <p class="text-muted">Commencez par ajouter votre premier artwork</p>
+                        <a href="{{ path('app_artwork_new') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Ajouter un Artwork
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const tableRows = document.querySelectorAll('#artworksTable tbody tr');
+    let searchTimeout;
+    
+    // Fonction de filtrage optimisée
+    function filterTable() {
+        clearTimeout(searchTimeout);
+        
+        searchTimeout = setTimeout(() => {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const statusValue = statusFilter.value;
+            let visibleCount = 0;
+            
+            tableRows.forEach(row => {
+                const title = row.querySelector('td:nth-child(3)')?.textContent.toLowerCase() || '';
+                const description = row.querySelector('td:nth-child(4)')?.textContent.toLowerCase() || '';
+                const status = row.dataset.status || '';
+                
+                const matchesSearch = !searchTerm || 
+                    title.includes(searchTerm) || 
+                    description.includes(searchTerm);
+                const matchesStatus = !statusValue || status === statusValue;
+                
+                const isVisible = matchesSearch && matchesStatus;
+                row.style.display = isVisible ? '' : 'none';
+                
+                if (isVisible) visibleCount++;
+            });
+            
+            // Afficher le nombre de résultats
+            updateResultsCount(visibleCount, tableRows.length);
+        }, 100); // Délai de 100ms pour éviter les ralentissements
+    }
+    
+    // Mettre à jour le compteur de résultats
+    function updateResultsCount(visible, total) {
+        let countElement = document.getElementById('resultsCount');
+        
+        if (!countElement) {
+            countElement = document.createElement('div');
+            countElement.id = 'resultsCount';
+            countElement.className = 'text-muted small mb-2';
+            const searchCard = document.querySelector('.card-body');
+            if (searchCard) {
+                searchCard.insertBefore(countElement, searchCard.firstChild);
+            }
+        }
+        
+        if (visible === total) {
+            countElement.textContent = `Affichage de ${total} artworks`;
+        } else {
+            countElement.textContent = `${visible} artwork${visible > 1 ? 's' : ''} trouvé${visible > 1 ? 's' : ''} sur ${total}`;
+        }
+        
+        // Message spécial si aucun résultat
+        if (visible === 0) {
+            countElement.innerHTML = `<span class="text-danger">Aucun artwork trouvé pour votre recherche</span>`;
+        }
+    }
+    
+    // Surligner les termes de recherche
+    function highlightSearchTerm(term) {
+        tableRows.forEach(row => {
+            if (row.style.display === 'none') return;
+            
+            const titleCell = row.querySelector('td:nth-child(3) strong');
+            const descCell = row.querySelector('td:nth-child(4) span');
+            
+            if (titleCell) {
+                const title = titleCell.textContent;
+                titleCell.innerHTML = highlightText(title, term);
+            }
+            
+            if (descCell) {
+                const description = descCell.textContent;
+                descCell.innerHTML = highlightText(description, term);
+            }
+        });
+    }
+    
+    // Fonction de surlignage
+    function highlightText(text, term) {
+        if (!term) return text;
+        
+        const regex = new RegExp(`(${escapeRegExp(term)})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    }
+    
+    // Échapper les caractères spéciaux pour les regex
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+    // Événements avec recherche en temps réel
+    searchInput.addEventListener('input', function() {
+        filterTable();
+        highlightSearchTerm(this.value.toLowerCase().trim());
+    });
+    
+    statusFilter.addEventListener('change', filterTable);
+    
+    // Initialisation
+    filterTable();
+    
+    // Ajouter un indicateur de recherche en cours
+    searchInput.addEventListener('input', function() {
+        if (this.value.length > 0) {
+            this.classList.add('searching');
+        } else {
+            this.classList.remove('searching');
+        }
+    });
+    
+    // Style pour l'indicateur de recherche
+    const style = document.createElement('style');
+    style.textContent = `
+        .searching {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fd7e14' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cpath d='m21 21-4.35-4.35'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 35px;
+        }
+        
+        mark {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 1px 2px;
+            border-radius: 3px;
+        }
+        
+        #resultsCount {
+            transition: all 0.3s ease;
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}

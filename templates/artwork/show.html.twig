@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ artwork.title }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ artwork.title }}</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    {% if artwork.imageUrl %}
+                        <div class="text-center mb-3">
+                            <img src="{{ artwork.imageUrl }}" alt="{{ artwork.title }}" class="img-fluid" style="max-height: 400px;">
+                        </div>
+                    {% endif %}
+                    
+                    <p class="card-text">{{ artwork.description }}</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Statut:</strong>
+                            <span class="badge bg-{{ artwork.status == 'published' ? 'success' : artwork.status == 'draft' ? 'warning' : 'secondary' }}">
+                                {{ artwork.status == 'published' ? 'Publié' : artwork.status == 'draft' ? 'Brouillon' : 'Archivé' }}
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Créé le:</strong> {{ artwork.createdAt ? artwork.createdAt|date('d/m/Y H:i') : '' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-3">
+                <a href="{{ path('app_artwork_edit', {'id': artwork.id}) }}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <a href="{{ path('app_artwork_index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

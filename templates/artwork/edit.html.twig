@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'Artwork{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Modifier l'Artwork</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': true}}) }}
+            
+            <div class="mb-3">
+                {{ form_label(form.title, 'Titre', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.title) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.imageUrl, 'URL de l\'image', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.imageUrl, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.imageUrl) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_label(form.status, 'Statut', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.status, {'attr': {'class': 'form-control'}}) }}
+                {{ form_errors(form.status) }}
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Mettre à jour
+                </button>
+                <a href="{{ path('app_artwork_index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
